@@ -37,6 +37,8 @@
 
 Discord: @aenclave
 
+[Mod discussion](https://discord.com/channels/1169792572382773318/1190188482581246062)
+
 ### Source
 
 https://github.com/IlyaChichkov/LethalAutocompleteMod
