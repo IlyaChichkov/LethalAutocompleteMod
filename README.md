@@ -1,6 +1,11 @@
-﻿# Lethal Autocomplete
+﻿<p align="center">
+  <img height="100" src="../media/images/icon.png" />
+</p>
 
-This mod adds to the game ability to quickly print terminal commands. Also it allows to look through commands history.
+<div align="center">
+  <h1>Lethal Autocomplete</h1>
+  <h3>This mod adds to the game ability to quickly print terminal commands. Also it allows to look through commands history.</h3>
+</div>
 
 ---
 
