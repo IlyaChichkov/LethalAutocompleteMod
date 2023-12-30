@@ -41,6 +41,9 @@ namespace LethalAutocomplete
             Autocomplete.historyNextKey = c_historyNextKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyNextKey.Value : $"<Keyboard>/{c_historyNextKey.Value}";
             ConfigEntry<string> c_historyPrevKey = Config.Bind("Keyboard Bindings", "History Prev", "<Keyboard>/downArrow", "Get current terminal session prev command");
             Autocomplete.historyPrevKey = c_historyPrevKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyPrevKey.Value : $"<Keyboard>/{c_historyPrevKey.Value}";
+            ConfigEntry<int> c_historyBufferLength = Config.Bind("History", "Buffer Length", 20, "Max amount of commands to remember during terminal session");
+            Autocomplete._historyMaxCount = c_historyBufferLength.Value;
+
         }
         
     }

@@ -23,7 +23,7 @@ namespace LethalAutocomplete
         private List<string> _terminalCommands;
         private List<string> _commandsHistory;
         private int _historyIndex;
-        private int _historyMaxCount = 20;
+        public static int _historyMaxCount = 20;
 	    
         private string _lastAutocomplete = "";
         private bool _startedAutocomplete = false;
