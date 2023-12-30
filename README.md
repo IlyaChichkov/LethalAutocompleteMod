@@ -9,11 +9,13 @@
 
 ---
 
-**Left Shift** - autocomplete (click again to print other results)
+**Tab** - autocomplete (click again to print other results), use **Esc** to exit terminal
 
 **Up Arrow** - previous command
 
 **Down Arrow** - next command
+
+Keybinds are editable in the plugin configuration file.
 
 ---
 
