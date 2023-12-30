@@ -11,8 +11,8 @@ namespace LethalAutocomplete
     [BepInDependency("com.rune580.LethalCompanyInputUtils", MinimumDependencyVersion: "0.4.2")]
     public partial class Plugin : BaseUnityPlugin
     {
-	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.2.0";
-	    
+	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.2.1";
+	    public static bool IsDebug = false;
 	    private Autocomplete _autocomplete;
 	    
         private void Awake()
@@ -28,9 +28,9 @@ namespace LethalAutocomplete
 				Autocomplete.keybinds = new Keybinds();
 				_autocomplete.Awake();
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				Logger.LogError(e);
+				Logger.LogError(ex);
 			}
 		}
         private void ConfigFile()
@@ -43,7 +43,8 @@ namespace LethalAutocomplete
             Autocomplete.historyPrevKey = c_historyPrevKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyPrevKey.Value : $"<Keyboard>/{c_historyPrevKey.Value}";
             ConfigEntry<int> c_historyBufferLength = Config.Bind("History", "Buffer Length", 20, "Max amount of commands to remember during terminal session");
             Autocomplete._historyMaxCount = c_historyBufferLength.Value;
-
+            ConfigEntry<bool> c_debugMode = Config.Bind("Other", "Enable Debug", false, "");
+            IsDebug = c_debugMode.Value;
         }
         
     }

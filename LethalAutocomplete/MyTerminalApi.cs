@@ -1,10 +1,11 @@
 ﻿using System;
+using BepInEx.Logging;
 
 namespace LethalAutocomplete
 {
     public class MyTerminalApi
     {
-        public static string GetTerminalInput(Terminal _terminal)
+        public static string GetTerminalInput(Terminal _terminal, ManualLogSource Logger)
         {
             string result = "";
             try
@@ -14,8 +15,9 @@ namespace LethalAutocomplete
                     result = _terminal.currentText.Substring(_terminal.currentText.Length - _terminal.textAdded);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Logger.LogError($"Failed on getting terminal input. Error: {ex}");
                 return result;
             }
 
