@@ -234,7 +234,7 @@ namespace LethalAutocomplete
         
         private void ResetAutocomplete()
         {
-	        Logger.LogInfo(">> WARNING! ResetAutocomplete!");
+	        Logger.LogInfo("Reset autocomplete state");
 	        _startedAutocomplete = false;
 	        _autocompleteOptionIndex = 0;
         }
