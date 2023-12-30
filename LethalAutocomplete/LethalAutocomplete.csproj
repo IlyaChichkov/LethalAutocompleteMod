@@ -72,8 +72,13 @@
         <Reference Include="UnityEngine.IMGUIModule">
           <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Autocomplete.cs" />
+        <Compile Include="Keybinds.cs" />
         <Compile Include="PluginCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
