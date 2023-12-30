@@ -48,7 +48,7 @@ namespace LethalAutocomplete
         private void OnTerminalTextChanged(object sender, TerminalTextChangedEventArgs e)
         {
 	        Logger.LogInfo("OnTerminalTextChanged");
-	        _input = GetTerminalInput();
+	        _input = MyTerminalApi.GetTerminalInput(_terminal);
 	        Logger.LogMessage($"INPUT: {_input}");
 	        Logger.LogMessage($"LAST: {_lastAutocomplete}");
 	        if (_input != _lastAutocomplete)
