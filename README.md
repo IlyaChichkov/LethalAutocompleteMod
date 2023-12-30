@@ -12,6 +12,17 @@ This mod adds to the game ability to quickly print terminal commands. Also it al
 
 ---
 
+## Change Log
+
+### [0.2.0]
+
+- Added plugin config file with keys binding 
+
+### [0.1.0]
+
+- Added autocomplete on Left Shift button
+- Added commands history look through Arrow Up/Down buttons 
+
 ### Source
 
 https://github.com/IlyaChichkov/LethalAutocompleteMod
