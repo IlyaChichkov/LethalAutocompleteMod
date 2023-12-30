@@ -1,4 +1,4 @@
-﻿<p align="center">
+<p align="center">
   <img height="100" src="../media/images/icon.png" />
 </p>
 
