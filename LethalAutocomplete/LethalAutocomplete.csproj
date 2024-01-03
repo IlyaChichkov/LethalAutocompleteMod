@@ -47,6 +47,10 @@
         <Reference Include="LethalCompanyInputUtils">
           <HintPath>C:\Users\Ilya\AppData\Roaming\Thunderstore Mod Manager\DataFolder\LethalCompany\profiles\Default\BepInEx\plugins\Rune580-LethalCompany_InputUtils\LethalCompanyInputUtils.dll</HintPath>
         </Reference>
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="Newtonsoft.Json">
+          <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\Newtonsoft.Json.dll</HintPath>
+        </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />
         <Reference Include="System.Data" />
@@ -72,8 +76,14 @@
         <Reference Include="UnityEngine.IMGUIModule">
           <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
         </Reference>
+        <Reference Include="UnityEngine.UI">
+          <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Lethal Company\Lethal Company_Data\Managed\UnityEngine.UI.dll</HintPath>
+        </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="Autocomplete.cs" />
+        <Compile Include="AutocompleteManager.cs" />
+        <Compile Include="Keybinds.cs" />
         <Compile Include="PluginCore.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
