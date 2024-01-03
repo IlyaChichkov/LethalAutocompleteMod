@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using BepInEx;
 using HarmonyLib;
 using System.Reflection;
@@ -11,39 +12,65 @@ namespace LethalAutocomplete
     [BepInDependency("com.rune580.LethalCompanyInputUtils", MinimumDependencyVersion: "0.4.2")]
     public partial class Plugin : BaseUnityPlugin
     {
-	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.2.0";
-	    
-	    private Autocomplete _autocomplete;
+	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.3.0";
+	    public static bool IsDebug = false;
+	    private AutocompleteManager _autocomplete;
+
+	    public string PluginPath = "";
 	    
         private void Awake()
 		{
 			Logger.LogInfo("Lethal Autocomplete Plugin is loaded!");
 			Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
+
+			try
+			{
+				PluginPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			}
+			catch (Exception ex)
+			{
+				Logger.LogError(ex);
+			}
 			
 			try
 			{
-				_autocomplete = new Autocomplete();
-				Autocomplete.Logger = Logger;
+				
+				_autocomplete = new AutocompleteManager();
+				AutocompleteManager.Logger = Logger;
 				ConfigFile();
-				Autocomplete.keybinds = new Keybinds();
+				AutocompleteManager.keybinds = new Keybinds();
 				_autocomplete.Awake();
 			}
-			catch (Exception e)
+			catch (Exception ex)
 			{
-				Logger.LogError(e);
+				Logger.LogError(ex);
 			}
 		}
+
+        private void OnApplicationQuit()
+        {
+	        _autocomplete.SaveToJson();
+        }
+
         private void ConfigFile()
         {
+	        string defaultSaveFileName = "save.json";
+	        string defaultSaveFilePath = Path.Combine(PluginPath, defaultSaveFileName);
+	        ConfigEntry<string> c_saveFilePath = Config.Bind("Basic", "Save Data Path", defaultSaveFilePath, "Path to the json file with autocomplete words and commands history");
+	        AutocompleteManager.saveFilePath = c_saveFilePath.Value;
+	        
             ConfigEntry<string> c_autocompleteKey = Config.Bind("Keyboard Bindings", "Autocomplete", "<Keyboard>/tab", "Get autocomplete for current input");
-            Autocomplete.autocompleteKey = c_autocompleteKey.Value.ToLower().StartsWith("<keyboard>") ? c_autocompleteKey.Value : $"<Keyboard>/{c_autocompleteKey.Value}";
+            AutocompleteManager.autocompleteKey = c_autocompleteKey.Value.ToLower().StartsWith("<keyboard>") ? c_autocompleteKey.Value : $"<Keyboard>/{c_autocompleteKey.Value}";
             ConfigEntry<string> c_historyNextKey = Config.Bind("Keyboard Bindings", "History Next", "<Keyboard>/upArrow", "Get current terminal session next command");
-            Autocomplete.historyNextKey = c_historyNextKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyNextKey.Value : $"<Keyboard>/{c_historyNextKey.Value}";
+            AutocompleteManager.historyNextKey = c_historyNextKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyNextKey.Value : $"<Keyboard>/{c_historyNextKey.Value}";
             ConfigEntry<string> c_historyPrevKey = Config.Bind("Keyboard Bindings", "History Prev", "<Keyboard>/downArrow", "Get current terminal session prev command");
-            Autocomplete.historyPrevKey = c_historyPrevKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyPrevKey.Value : $"<Keyboard>/{c_historyPrevKey.Value}";
+            AutocompleteManager.historyPrevKey = c_historyPrevKey.Value.ToLower().StartsWith("<keyboard>") ? c_historyPrevKey.Value : $"<Keyboard>/{c_historyPrevKey.Value}";
+            ConfigEntry<bool> c_historySave = Config.Bind("History", "Save History", true, "Regulates if the history be saved after the re-entry");
+            AutocompleteManager.saveHistory = c_historySave.Value;
             ConfigEntry<int> c_historyBufferLength = Config.Bind("History", "Buffer Length", 20, "Max amount of commands to remember during terminal session");
-            Autocomplete._historyMaxCount = c_historyBufferLength.Value;
-
+            AutocompleteManager.historyMaxCount = c_historyBufferLength.Value;
+            ConfigEntry<bool> c_debugMode = Config.Bind("Other", "Enable Debug", false, "");
+            IsDebug = c_debugMode.Value;
         }
         
     }

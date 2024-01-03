@@ -15,19 +15,19 @@ namespace LethalAutocomplete
             builder.NewActionBinding()
                 .WithActionId("Autocomplete")
                 .WithActionType(InputActionType.Button)
-                .WithKbmPath(Autocomplete.autocompleteKey)
+                .WithKbmPath(AutocompleteManager.autocompleteKey)
                 .WithBindingName("Autocomplete Key")
                 .Finish();
             builder.NewActionBinding()
                 .WithActionId("HistoryNext")
                 .WithActionType(InputActionType.Button)
-                .WithKbmPath(Autocomplete.historyNextKey)
+                .WithKbmPath(AutocompleteManager.historyNextKey)
                 .WithBindingName("HistoryNext Key")
                 .Finish();
             builder.NewActionBinding()
                 .WithActionId("HistoryPrev")
                 .WithActionType(InputActionType.Button)
-                .WithKbmPath(Autocomplete.historyPrevKey)
+                .WithKbmPath(AutocompleteManager.historyPrevKey)
                 .WithBindingName("HistoryPrev Key")
                 .Finish();
         }
