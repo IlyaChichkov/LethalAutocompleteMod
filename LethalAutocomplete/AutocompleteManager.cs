@@ -125,14 +125,11 @@ namespace LethalAutocomplete
 		{
 			try
 			{
+				if(Plugin.IsDebug) Logger.LogMessage($"Terminal is started");
 				_terminalCommands.Clear();
 				for (int i = 0; i < _terminal.terminalNodes.allKeywords.Length; i++)
 				{
-					_autocomplete.Insert(_terminal.terminalNodes.allKeywords[i].name, 10);
-				}
-				for (int i = 0; i < _terminal.moonsCatalogueList.Length; i++)
-				{
-					_autocomplete.Insert(_terminal.moonsCatalogueList[i].PlanetName.Split(' ')[1], 10);
+					_autocomplete.Insert(_terminal.terminalNodes.allKeywords[i]);
 				}
 			}
 			catch (Exception exception)
@@ -276,6 +273,16 @@ namespace LethalAutocomplete
 	        try
 	        {
 		        var options = _autocomplete.GetAutocomplete(_input);
+
+		        if (Plugin.IsDebug)
+		        {
+			        Logger.LogInfo($"Autocomplete options:");
+			        foreach (var option in options)
+			        {
+				        Logger.LogInfo($"{option}");
+			        }
+		        }
+		        
 		        if (options != null && options.Count > 0)
 		        {
 			        _autocompleteOptions = new List<string>(options);
@@ -352,7 +359,7 @@ namespace LethalAutocomplete
         
         class SaveData
         {
-	        public Dictionary<string, int> Words { get; set; }
+	        public List<WordNode> Words { get; set; }
 	        public Dictionary<string, List<string>> History { get; set; }
         }
         
@@ -374,7 +381,7 @@ namespace LethalAutocomplete
 			        Logger.LogInfo(_commandsHistory[i]);
 		        }
 		        Logger.LogInfo($"_historyIndex={_historyIndex}");
-		        _autocomplete.LoadSerializedWords(saveData.Words);
+		        _autocomplete.SetWords(saveData.Words);
 		        Logger.LogMessage($"Loaded save from JSON!");
 	        }
 	        catch (Exception ex)
