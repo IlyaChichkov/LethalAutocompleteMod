@@ -7,6 +7,42 @@ using BepInEx.Logging;
 
 namespace LethalAutocomplete
 {
+    public class WordNode
+    {
+        public string Word { get; set; }
+        public List<WordNode> Children { get; set; }
+        public int Weight { get; set; } // Добавленная переменная Weight
+    
+        public WordNode(string word, int weight)
+        {
+            Word = word;
+            Weight = weight;
+            Children = new List<WordNode>();
+        }
+    
+        public List<WordNode> FindMatchingWords(string[] inputs)
+        {
+            List<WordNode> matchingWords = new List<WordNode>();
+    
+            if (inputs.Length == 0 || Word.ToLower().StartsWith(inputs[0].ToLower()))
+            {
+                if (inputs.Length == 1)
+                {
+                    matchingWords.Add(this);
+                }
+                else
+                {
+                    foreach (var child in Children)
+                    {
+                        matchingWords.AddRange(child.FindMatchingWords(inputs.Skip(1).ToArray()));
+                    }
+                }
+            }
+    
+            return matchingWords;
+        }
+    }
+    
     public class Autocomplete
     {
         private Dictionary<string, int> _words;
