@@ -352,7 +352,7 @@ namespace LethalAutocomplete
         
         class SaveData
         {
-	        public Dictionary<string, int> Words { get; set; }
+	        public List<WordNode> Words { get; set; }
 	        public Dictionary<string, List<string>> History { get; set; }
         }
         
@@ -374,7 +374,7 @@ namespace LethalAutocomplete
 			        Logger.LogInfo(_commandsHistory[i]);
 		        }
 		        Logger.LogInfo($"_historyIndex={_historyIndex}");
-		        _autocomplete.LoadSerializedWords(saveData.Words);
+		        _autocomplete.SetWords(saveData.Words);
 		        Logger.LogMessage($"Loaded save from JSON!");
 	        }
 	        catch (Exception ex)
