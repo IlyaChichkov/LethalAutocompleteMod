@@ -36,15 +36,48 @@ Commands with weight equal to 0 won't be suggested for autocomplete.
 
 ```json
 {
-  "Words": {
-    "Buy": 10,
-    "ProFlashlight": 10,
-    "Confirm": 10,
-    "Deny": 10,
-    "Store": 10
-  }
+  "Words": [
+    {
+      "Word":"Buy",
+      "Weight":10
+    },
+    {
+      "Word":"ProFlashlight",
+      "Weight":10
+    },
+    {
+      "Word":"Confirm",
+      "Weight":10
+    }
+  ]
 }
 ```
+
+## Change Log
+
+### [0.4.0]
+
+- Added autocomplete for commands containing several words, such as: buy, route, info, view.
+- Added autocomplete count option for buy command
+
+### [0.3.0]
+
+- Added weights to commands for more precise autocomplete which can be edited in config file
+- Commands history saving
+- Small fixes
+
+### [0.2.1]
+
+- Non critical errors handling
+
+### [0.2.0]
+
+- Added plugin config file with keys binding
+
+### [0.1.0]
+
+- Added autocomplete on Left Shift button
+- Added commands history look through Arrow Up/Down buttons
 
 ### Dependencies
 
