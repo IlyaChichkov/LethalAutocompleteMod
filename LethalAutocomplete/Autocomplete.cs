@@ -113,6 +113,7 @@ namespace LethalAutocomplete
                 
                 matchingNodes = matchingNodes
                     .Distinct()
+                    .Where(n => n.Weight > 0)
                     .OrderByDescending(n => n.Weight)
                     .ToList();
 
