@@ -61,11 +61,12 @@ namespace LethalAutocomplete
             if (ContainsWord(word)) return;
             
             WordNode node = new WordNode(word, _defaultWeight);
-            
+
             for (int j = 0; j < terminalKeyword.compatibleNouns.Length; j++)
             {
                 string noun = "";
-                if (word.ToLower() == "route")
+                string[] specialWords = new[] { "route", "info" };
+                if (specialWords.Any(word.ToLower().Contains)) 
                 {
                     noun = terminalKeyword.compatibleNouns[j].noun.word;
                 }
