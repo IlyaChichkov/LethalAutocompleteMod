@@ -45,20 +45,54 @@ namespace LethalAutocomplete
     
     public class Autocomplete
     {
-        private Dictionary<string, int> _words;
+        private List<WordNode> _words;
         public static ManualLogSource Logger;
 
+        private readonly int _defaultWeight = 10;
+        
         public Autocomplete()
         {
-            _words = new Dictionary<string, int>();
+            _words = new List<WordNode>();
         }
         
-        public void Insert(string word, int weight)
+        public void Insert(TerminalKeyword terminalKeyword)
         {
-            if(!_words.Keys.Contains(word))
-                _words.Add(word, weight);
+            string word = terminalKeyword.name;
+            if (ContainsWord(word)) return;
+            
+            WordNode node = new WordNode(word, _defaultWeight);
+            
+            for (int j = 0; j < terminalKeyword.compatibleNouns.Length; j++)
+            {
+                string noun = "";
+                if (word.ToLower() == "route")
+                {
+                    noun = terminalKeyword.compatibleNouns[j].noun.word;
+                }
+                else
+                {
+                    noun = (terminalKeyword.compatibleNouns[j].noun).ToString().Split(' ')[0];
+                }
+                var nounNode = new WordNode(noun, _defaultWeight);
+
+                if (word.ToLower() == "buy")
+                {
+                    for (int k = 1; k < 10; k++)
+                    {
+                        nounNode.Children.Add(new WordNode(k.ToString(), 10 - k));
+                    }
+                }
+                node.Children.Add(nounNode);
+            }
+
+            _words.Add(node);
         }
 
+        private bool ContainsWord(string word)
+        {
+            return _words.Any(node => node.Word == word);
+        }
+        
         public List<string> GetAutocomplete(string input)
         {
             try
