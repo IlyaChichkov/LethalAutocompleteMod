@@ -97,11 +97,26 @@ namespace LethalAutocomplete
         {
             try
             {
-                return _words
-                    .Where(option => option.Key.StartsWith(input, StringComparison.OrdinalIgnoreCase) && option.Value > 0)
-                    .OrderByDescending(option => option.Value)
-                    .Select(option => option.Key)
+                var inputs = input.Split(' ');
+                List<WordNode> matchingNodes = new List<WordNode>();
+
+                string matching_start = "";
+                for (int i = 0; i < inputs.Length - 1; i++)
+                {
+                    matching_start += inputs[i] + " ";
+                }
+                
+                foreach (var node in _words)
+                {
+                    matchingNodes.AddRange(node.FindMatchingWords(inputs));
+                }
+                
+                matchingNodes = matchingNodes
+                    .Distinct()
+                    .OrderByDescending(n => n.Weight)
                     .ToList();
+
+                return matchingNodes.Select(n => matching_start + n.Word).ToList();
             }
             catch (Exception ex)
             {
