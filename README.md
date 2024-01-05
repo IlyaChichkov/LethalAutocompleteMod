@@ -58,7 +58,7 @@ Commands with weight equal to 0 won't be suggested for autocomplete.
 ### [0.4.0]
 
 - Added autocomplete for commands containing several words, such as: buy, route, info, view.
-- Added autocomplete count option for buy command
+- Added count option autocomplete for buy command
 
 ### [0.3.0]
 
