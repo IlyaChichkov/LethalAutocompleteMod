@@ -125,15 +125,14 @@ namespace LethalAutocomplete
             }
         }
 
-        public Dictionary<string, int> GetWords()
+        public List<WordNode> GetWords()
         {
             return _words;
         }
         
-        
-        public void LoadSerializedWords(Dictionary<string, int> words)
+        public void SetWords(List<WordNode> words)
         {
-            _words = new Dictionary<string, int>(words);
+            _words = new List<WordNode>(words);
         }
     }
 }
