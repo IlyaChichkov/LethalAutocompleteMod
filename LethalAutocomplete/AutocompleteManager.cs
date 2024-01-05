@@ -128,11 +128,7 @@ namespace LethalAutocomplete
 				_terminalCommands.Clear();
 				for (int i = 0; i < _terminal.terminalNodes.allKeywords.Length; i++)
 				{
-					_autocomplete.Insert(_terminal.terminalNodes.allKeywords[i].name, 10);
-				}
-				for (int i = 0; i < _terminal.moonsCatalogueList.Length; i++)
-				{
-					_autocomplete.Insert(_terminal.moonsCatalogueList[i].PlanetName.Split(' ')[1], 10);
+					_autocomplete.Insert(_terminal.terminalNodes.allKeywords[i]);
 				}
 			}
 			catch (Exception exception)
