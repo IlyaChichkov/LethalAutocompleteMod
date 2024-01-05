@@ -125,6 +125,7 @@ namespace LethalAutocomplete
 		{
 			try
 			{
+				if(Plugin.IsDebug) Logger.LogMessage($"Terminal is started");
 				_terminalCommands.Clear();
 				for (int i = 0; i < _terminal.terminalNodes.allKeywords.Length; i++)
 				{
@@ -272,6 +273,16 @@ namespace LethalAutocomplete
 	        try
 	        {
 		        var options = _autocomplete.GetAutocomplete(_input);
+
+		        if (Plugin.IsDebug)
+		        {
+			        Logger.LogInfo($"Autocomplete options:");
+			        foreach (var option in options)
+			        {
+				        Logger.LogInfo($"{option}");
+			        }
+		        }
+		        
 		        if (options != null && options.Count > 0)
 		        {
 			        _autocompleteOptions = new List<string>(options);
