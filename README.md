@@ -55,6 +55,10 @@ Commands with weight equal to 0 won't be suggested for autocomplete.
 
 ## Change Log
 
+### [0.4.1]
+
+- Make save path in config file optional and use user's local path by default
+
 ### [0.4.0]
 
 - Added autocomplete for commands containing several words, such as: buy, route, info, view.
