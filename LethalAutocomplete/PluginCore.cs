@@ -12,7 +12,7 @@ namespace LethalAutocomplete
     [BepInDependency("com.rune580.LethalCompanyInputUtils", MinimumDependencyVersion: "0.4.2")]
     public partial class Plugin : BaseUnityPlugin
     {
-	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.3.0";
+	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.4.1";
 	    public static bool IsDebug = false;
 	    private AutocompleteManager _autocomplete;
 
@@ -56,8 +56,17 @@ namespace LethalAutocomplete
         {
 	        string defaultSaveFileName = "save.json";
 	        string defaultSaveFilePath = Path.Combine(PluginPath, defaultSaveFileName);
-	        ConfigEntry<string> c_saveFilePath = Config.Bind("Basic", "Save Data Path", defaultSaveFilePath, "Path to the json file with autocomplete words and commands history");
-	        AutocompleteManager.saveFilePath = c_saveFilePath.Value;
+	        
+	        ConfigEntry<string> c_saveFilePath = Config.Bind("Basic", "Save Data Path", "", "Absolute path to the json file with autocomplete words and commands history. By default save.json generated in plugins/red_eye-LethalAutocomplete folder.");
+	        string path = c_saveFilePath.Value;
+	        if (!File.Exists(path) && path != "")
+	        {
+		        path = defaultSaveFilePath;
+		        Config.Remove(new ConfigDefinition("Basic", "Save Data Path"));
+		        Config.Bind("Basic", "Save Data Path", defaultSaveFilePath, "Absolute path to the json file with autocomplete words and commands history. By default save.json generated in plugins/red_eye-LethalAutocomplete folder.");
+		        Logger.LogWarning($"The save file wasn't found in the directory specified by the configuration file! Using default path.");
+	        }
+	        AutocompleteManager.saveFilePath = path == "" ? defaultSaveFilePath : path;
 	        
             ConfigEntry<string> c_autocompleteKey = Config.Bind("Keyboard Bindings", "Autocomplete", "<Keyboard>/tab", "Get autocomplete for current input");
             AutocompleteManager.autocompleteKey = c_autocompleteKey.Value.ToLower().StartsWith("<keyboard>") ? c_autocompleteKey.Value : $"<Keyboard>/{c_autocompleteKey.Value}";
