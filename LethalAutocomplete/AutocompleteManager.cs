@@ -29,6 +29,7 @@ namespace LethalAutocomplete
         private string _input;
         private List<string> _terminalCommands;
         private List<string> _commandsHistory;
+        private List<string> _historyBlacklist;
         private int _historyIndex;
 	    
         private string _lastAutocomplete = "";
@@ -45,6 +46,7 @@ namespace LethalAutocomplete
 	        if(Plugin.IsDebug) Logger.LogInfo($"Lethal Autocomplete Plugin is loaded! Autocomplete Key: {autocompleteKey}");
 	        _terminalCommands = new List<string>();
 	        _commandsHistory = new List<string>();
+	        _historyBlacklist = new List<string>();
 	        _autocomplete = new Autocomplete();
 	        Autocomplete.Logger = Logger;
 	        
@@ -91,6 +93,7 @@ namespace LethalAutocomplete
 			{
 				if(Plugin.IsDebug) Logger.LogMessage("Terminal is starting");
 				_terminal = TerminalApi.TerminalApi.Terminal;
+				
 				if (autocompleteKey.Contains("tab"))
 				{
 					RemoveTerminalExitBinding();
@@ -129,6 +132,7 @@ namespace LethalAutocomplete
 				_terminalCommands.Clear();
 				for (int i = 0; i < _terminal.terminalNodes.allKeywords.Length; i++)
 				{
+					Logger.LogWarning($"Add: {_terminal.terminalNodes.allKeywords[i]}");
 					_autocomplete.Insert(_terminal.terminalNodes.allKeywords[i]);
 				}
 			}
@@ -145,12 +149,17 @@ namespace LethalAutocomplete
 			if(Plugin.IsDebug) Logger.LogMessage($"TextSubmitted: {_input}");
 			try
 			{
-				if (e.SubmittedText != "")
+				if (e.SubmittedText != "" && !_historyBlacklist.Contains(e.SubmittedText))
 				{
 					// Save value in history
 					if (_commandsHistory.Count + 1 > historyMaxCount)
 					{
 						_commandsHistory.RemoveAt(0);
+					}
+
+					if (_commandsHistory.Contains(e.SubmittedText))
+					{
+						_commandsHistory.Remove(e.SubmittedText);
 					}
 					_commandsHistory.Add(e.SubmittedText);
 					_historyIndex = _commandsHistory.Count;
@@ -208,12 +217,12 @@ namespace LethalAutocomplete
 
         private void OnHistoryNextKey(InputAction.CallbackContext ctx)
         {
-	        SetTerminalInput("");
 	        try
 	        {
 		        if (_commandsHistory.Count < 1) return;
 		        if (_historyIndex < 1) return;
 		        _historyIndex--;
+		        Logger.LogInfo($"Set input to '{_commandsHistory[_historyIndex]}'.");
 		        SetTerminalInput(_commandsHistory[_historyIndex]);
 	        }
 	        catch (Exception ex)
@@ -234,10 +243,12 @@ namespace LethalAutocomplete
 		        {
 			        _historyIndex = _commandsHistory.Count;
 			        SetTerminalInput("");
+			        Logger.LogInfo("Set input to ''.");
 			        Logger.LogInfo($"INPUT: {GetTerminalInput()}");
 			        return;
 		        }
 		        _historyIndex++;
+		        Logger.LogInfo($"Set input to '{_commandsHistory[_historyIndex]}'.");
 		        SetTerminalInput(_commandsHistory[_historyIndex]);
 	        }
 	        catch (Exception ex)
@@ -347,10 +358,18 @@ namespace LethalAutocomplete
 	        var history = new Dictionary<string, List<string>>();
 	        history["value"] = _commandsHistory;
 	        
+	        var blacklist = new List<string>();
+	        blacklist = _autocomplete.blacklist;
+	        
+	        var historyBlacklist = new List<string>();
+	        historyBlacklist = _historyBlacklist;
+	        
 	        var combinedData = new
 	        {
 		        Words = words,
-		        History = history
+		        History = history,
+		        CommandsBlacklist = blacklist,
+		        HistoryBlacklist = historyBlacklist
 	        };
 
 	        string jsonData = JsonConvert.SerializeObject(combinedData, Formatting.Indented);
@@ -361,6 +380,8 @@ namespace LethalAutocomplete
         {
 	        public List<WordNode> Words { get; set; }
 	        public Dictionary<string, List<string>> History { get; set; }
+	        public List<string> CommandsBlacklist { get; set; }
+	        public List<string> HistoryBlacklist { get; set; }
         }
         
         private void LoadFromJson()
@@ -373,14 +394,13 @@ namespace LethalAutocomplete
 		        if (string.IsNullOrEmpty(jsonData)) return;
 
 		        SaveData saveData = JsonConvert.DeserializeObject<SaveData>(jsonData);
-		        _commandsHistory = new List<string>(saveData.History["value"]);
+		        _autocomplete.blacklist = saveData.CommandsBlacklist;
+		        _historyBlacklist = saveData.HistoryBlacklist;
+		        
+		        var history = saveData.History["value"];
+		        _commandsHistory = new List<string>(history.Except(_historyBlacklist));
 		        _historyIndex = _commandsHistory.Count;
 		        
-		        for (int i = 0; i < _commandsHistory.Count; i++)
-		        {
-			        Logger.LogInfo(_commandsHistory[i]);
-		        }
-		        Logger.LogInfo($"_historyIndex={_historyIndex}");
 		        _autocomplete.SetWords(saveData.Words);
 		        Logger.LogMessage($"Loaded save from JSON!");
 	        }
