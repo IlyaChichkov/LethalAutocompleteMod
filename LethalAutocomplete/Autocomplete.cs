@@ -46,6 +46,8 @@ namespace LethalAutocomplete
     public class Autocomplete
     {
         private List<WordNode> _words;
+        
+        public List<string> blacklist;
         public static ManualLogSource Logger;
 
         private readonly int _defaultWeight = 10;
@@ -53,12 +55,22 @@ namespace LethalAutocomplete
         public Autocomplete()
         {
             _words = new List<WordNode>();
+            blacklist = new List<string>();
         }
         
         public void Insert(TerminalKeyword terminalKeyword)
         {
             string word = terminalKeyword.name;
-            if (ContainsWord(word)) return;
+            bool blackListWord = blacklist.Contains(word);
+            if (ListContainsWord(word, _words))
+            {
+                if (blackListWord)
+                {
+                    _words = _words.Where(x => x.Word != word).ToList();
+                }
+                return;
+            }
+            if(blackListWord) return;
             
             WordNode node = new WordNode(word, _defaultWeight);
 
@@ -89,9 +101,9 @@ namespace LethalAutocomplete
             _words.Add(node);
         }
 
-        private bool ContainsWord(string word)
+        private bool ListContainsWord(string word, List<WordNode> list)
         {
-            return _words.Any(node => node.Word == word);
+            return list.Any(node => node.Word == word);
         }
         
         public List<string> GetAutocomplete(string input)

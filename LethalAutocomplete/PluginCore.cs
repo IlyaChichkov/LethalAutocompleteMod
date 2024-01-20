@@ -12,7 +12,7 @@ namespace LethalAutocomplete
     [BepInDependency("com.rune580.LethalCompanyInputUtils", MinimumDependencyVersion: "0.4.2")]
     public partial class Plugin : BaseUnityPlugin
     {
-	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.4.1";
+	    private const string _GUID = "redeye.lethalautocomplete", _Name = "Lethal Autocomplete", _Version = "0.4.2";
 	    public static bool IsDebug = false;
 	    private AutocompleteManager _autocomplete;
 
