@@ -60,45 +60,61 @@ namespace LethalAutocomplete
         
         public void Insert(TerminalKeyword terminalKeyword)
         {
-            string word = terminalKeyword.name;
-            bool blackListWord = blacklist.Contains(word);
-            if (ListContainsWord(word, _words))
+            try
             {
-                if (blackListWord)
+                string word = terminalKeyword.name;
+                
+                bool blackListWord = blacklist.Contains(word);
+                if (ListContainsWord(word, _words))
                 {
-                    _words = _words.Where(x => x.Word != word).ToList();
-                }
-                return;
-            }
-            if(blackListWord) return;
-            
-            WordNode node = new WordNode(word, _defaultWeight);
-
-            for (int j = 0; j < terminalKeyword.compatibleNouns.Length; j++)
-            {
-                string noun = "";
-                string[] specialWords = new[] { "route", "info" };
-                if (specialWords.Any(word.ToLower().Contains)) 
-                {
-                    noun = terminalKeyword.compatibleNouns[j].noun.word;
-                }
-                else
-                {
-                    noun = (terminalKeyword.compatibleNouns[j].noun).ToString().Split(' ')[0];
-                }
-                var nounNode = new WordNode(noun, _defaultWeight);
-
-                if (word.ToLower() == "buy")
-                {
-                    for (int k = 1; k < 10; k++)
+                    if (blackListWord)
                     {
-                        nounNode.Children.Add(new WordNode(k.ToString(), 10 - k));
+                        _words = _words.Where(x => x.Word != word).ToList();
+                    }
+                    return;
+                }
+                if(blackListWord) return;
+                
+                WordNode node = new WordNode(word, _defaultWeight);
+
+                if (terminalKeyword.compatibleNouns != null)
+                {
+                    for (int j = 0; j < terminalKeyword.compatibleNouns.Length; j++)
+                    {
+                        string noun = "";
+                        string[] specialWords = new[] { "route", "info" };
+                        if (specialWords.Any(word.ToLower().Contains)) 
+                        {
+                            noun = terminalKeyword.compatibleNouns[j].noun.word;
+                        }
+                        else
+                        {
+                            noun = (terminalKeyword.compatibleNouns[j].noun).ToString().Split(' ')[0];
+                        }
+                        var nounNode = new WordNode(noun, _defaultWeight);
+
+                        if (word.ToLower() == "buy")
+                        {
+                            for (int k = 1; k < 10; k++)
+                            {
+                                nounNode.Children.Add(new WordNode(k.ToString(), 10 - k));
+                            }
+                        }
+                        node.Children.Add(nounNode);
                     }
                 }
-                node.Children.Add(nounNode);
-            }
 
-            _words.Add(node);
+                _words.Add(node);
+            }
+            catch (Exception exception)
+            {
+                string word = "None";
+                if (terminalKeyword && terminalKeyword.name != "")
+                {
+                    word = terminalKeyword.name;
+                }
+                Logger.LogError($"Failed to add terminal keyword '{word}' in to autocomplete dictionary! Exception: {exception}");
+            }
         }
 
         private bool ListContainsWord(string word, List<WordNode> list)
